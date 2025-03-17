@@ -1,28 +1,26 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken"
+import { JWT_SECRET } from "./config";
 
-export function jwtMiddleWare(req : Request , res : Response , next: NextFunction) {
+
+
+
+export function jwtMiddleWare(req : Request , res : Response , next : NextFunction) {
     const jwtHeaders = req.headers["authorization"];
-    const jwtToken = jwtHeaders?.split(" ")[1]
-   
-    try {
-        //console.log(jwtToken);
-       // console.log(jwtHeaders)
-        const AUTH_KEY = Bun.env.AUTH_JWT_KEY
-        const decoded =  jwt.decode(jwtToken , AUTH_KEY , {
-            algorithms : ['RS256']
-        })
-        if(decoded?.sub) {
-            
-            req.userId = decoded.sub
-            next()
-        }
-    } catch (error) {
+    if(!jwtHeaders) {
         res.status(400).json({
-            message : "Decoding Error"
+            message : "Invalid jwtHeaders"
         })
         return
     }
- 
 
+    const decoded = jwt.verify(JWT_SECRET , jwtHeaders)
+    if(!decoded || !decoded.sub) {
+       res.json({
+        message : "Not decoded"
+       })
+    }
+
+    req.userId = decoded.sub as string
+    next()
 }

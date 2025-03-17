@@ -20,7 +20,7 @@ export class FalModel extends BaseModel {
             webhookUrl: `${process.env.WEB_BASE_URL}/fal-ai/webhook/image`,
         });
 
-        return { request_id : "", response_url : "" }
+        return { request_id, response_url}
     }
 
 
@@ -32,7 +32,7 @@ export class FalModel extends BaseModel {
             },
             webhookUrl: `${process.env.WEB_BASE_URL}/fal-ai/webhook/train`,
         });
-        return { request_id : "", response_url : "" }
+        return { request_id  , response_url  }
     }
 
     public async generateImageSync(tensorPath: string) {
