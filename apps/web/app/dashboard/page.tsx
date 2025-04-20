@@ -1,3 +1,4 @@
+import { AppBar } from '@/components/AppBar';
 import { ImageGenerate } from '@/components/ImageGenerate';
 import { Packs } from '@/components/Packs';
 import { Photos } from '@/components/Photos';
@@ -6,18 +7,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function DashBoard() {
 	return (
-		<div className="flex justify-center m-2">
-			<div className="w-8xl">
+		<div className="flex flex-col items-center min-h-screen bg-background">
+			<AppBar />
+			<div className="w-full max-w-5xl px-4 pt-28">
 				<div className="flex justify-center">
 					<Tabs defaultValue="account" className="w-[400px] justify-center">
-						<div className="flex justify-center">
-							<TabsList>
-								<TabsTrigger value="photos">Photos</TabsTrigger>
-								<TabsTrigger value="generate">Generate</TabsTrigger>
-								<TabsTrigger value="train">Train Model</TabsTrigger>
-								<TabsTrigger value="packs">Default Packs</TabsTrigger>
-							</TabsList>
-						</div>
+						<TabsList>
+							<TabsTrigger value="photos">Photos</TabsTrigger>
+							<TabsTrigger value="generate">Generate</TabsTrigger>
+							<TabsTrigger value="train">Train Model</TabsTrigger>
+							<TabsTrigger value="packs">Default Packs</TabsTrigger>
+						</TabsList>
 						<TabsContent value="generate">
 							<ImageGenerate />
 						</TabsContent>
@@ -29,8 +29,7 @@ export default function DashBoard() {
 						</TabsContent>
 						<TabsContent value="photos">
 							<Photos />
-
-							</TabsContent>
+						</TabsContent>
 					</Tabs>
 				</div>
 			</div>
