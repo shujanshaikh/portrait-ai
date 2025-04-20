@@ -1,158 +1,135 @@
 "use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import axios from "axios"
+import { useAuth } from "@clerk/nextjs"
+import { BACKEND_URL } from "@/config"
+
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import { Upload } from "@/components/ui/upload"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import axios from "axios"
-import { BACKEND_URL } from "@/config"
-import { useAuth } from "@clerk/nextjs"
 
 export default function TrainModel() {
-    const { getToken } = useAuth()
-    const [zipUrl, setZipUrl] = useState("")
-    const [name, setName] = useState("")
-    const [type, setType] = useState("Man")
-    const [eyeColor, setEyecolor] = useState<string>("")
-    const [ethinicity, setEthinicity] = useState<string>("")
-    const [bald, setBald] = useState(false)
-    const [age, setAge] = useState<string>("")
-    const router = useRouter()
+  const { getToken } = useAuth()
+  const router = useRouter()
 
-    async function trainModel() {
-        const inputField = {
-            ethinicity,
-            name,
-            zipUrl,
-            bald,
-            eyeColor,
-            type,
-            age: parseInt(age ?? "0"),
-        }
+  const [zipUrl, setZipUrl] = useState("")
+  const [name, setName] = useState("")
+  const [type, setType] = useState("Man")
+  const [eyeColor, setEyecolor] = useState("")
+  const [ethinicity, setEthinicity] = useState("")
+  const [bald, setBald] = useState(false)
+  const [age, setAge] = useState("")
 
-        try {
-            const jwtToken = await getToken();
-            const response = await axios.post(`${BACKEND_URL}/ai/training`, inputField, {
-                headers: { Authorization: `Bearer ${jwtToken}` },
-            });
-            console.log(response);
-            router.push("/");
-        } catch (error) {
-            console.error("Request failed:", error);
-        }
+  async function trainModel() {
+    const input = {
+      name,
+      type,
+      age: parseInt(age || "0"),
+      eyeColor,
+      ethinicity,
+      bald,
+      zipUrl,
     }
 
-    return (
-        <div className="flex flex-col items-center justify-center rounded-lg p-15 space-y-6">
-            <Card className="w-[900px]">
-                <CardHeader>
-                    <CardTitle>Train Model</CardTitle>
-                    <CardDescription>Train your Model to Generate the image</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex gap-4">
-                    <div className="grid w-full items-center gap-4">
-                   
-                        <div className="flex flex-col space-y-1.5 flex-1">
-                            <Label htmlFor="name">Name</Label>
-                            <Input onChange={(e) => setName(e.target.value)} id="name" placeholder="Name of your project" />
-                        </div>
+    try {
+      const jwtToken = await getToken()
+      await axios.post(`${BACKEND_URL}/ai/training`, input, {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+      })
+      router.push("/")
+    } catch (err) {
+      console.error("Training failed:", err)
+    }
+  }
 
-                        
-                        <div className="flex flex-col space-y-1.5 flex-1">
-                            <Label htmlFor="type">Type</Label>
-                            <Select onValueChange={setType}>
-                                <SelectTrigger id="type">
-                                    <SelectValue placeholder="Select" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    <SelectItem value="Man">Man</SelectItem>
-                                    <SelectItem value="Women">Women</SelectItem>
-                                    <SelectItem value="Other">Other</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            </div>
-                        </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      <Card className="w-full max-w-8xl bg-black/60 border border-purple-500/30 shadow-xl backdrop-blur-md rounded-2xl p-2">
+        <CardHeader className="text-center mb-4">
+          <CardTitle className="text-3xl font-bold text-purple-300">Train Your Model</CardTitle>
+          <CardDescription className="text-purple-200 text-sm">Fill in the details to start training.</CardDescription>
+        </CardHeader>
 
-                    
-                        <div>
-                            <Label htmlFor="age">Age</Label>
-                            <Input onChange={(e) => setAge(e.target.value)} id="age" placeholder="Age of the Model" />
-                        </div>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InputField label="Name" value={name} onChange={setName} />
+            <SelectField label="Type" value={type} onChange={setType} options={["Man", "Women", "Other"]} />
+            <InputField label="Age" value={age} onChange={setAge} />
+            <SelectField label="Ethnicity" value={ethinicity} onChange={setEthinicity} options={["White", "Black", "Asian_American", "Hispanic", "Indian", "Middle_Easter", "South_Asian"]} />
+            <SelectField label="Eye Color" value={eyeColor} onChange={setEyecolor} options={["Brown", "Blue", "Hazel", "Grey"]} />
+            <div className="flex items-center gap-3">
+              <Label htmlFor="bald">Bald</Label>
+              <Switch id="bald" checked={bald} onCheckedChange={setBald} />
+            </div>
+            <div className="col-span-1 md:col-span-2">
+              <Label>Upload Dataset (.zip)</Label>
+              <Upload onUpload={setZipUrl} />
+            </div>
+          </div>
+        </CardContent>
 
-                        
-                        <div>
-                            <Label htmlFor="ethinicity">Ethnicity</Label>
-                            <Select onValueChange={setEthinicity}>
-                                <SelectTrigger id="ethinicity">
-                                    <SelectValue placeholder="Select" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    <SelectItem value="White">White</SelectItem>
-                                    <SelectItem value="Black">Black</SelectItem>
-                                    <SelectItem value="Asian_American">Asian American</SelectItem>
-                                    <SelectItem value="Hispanic">Hispanic</SelectItem>
-                                    <SelectItem value="Indian">Indian</SelectItem>
-                                    <SelectItem value="Middle_Easter">Middle Easter</SelectItem>
-                                    <SelectItem value="South_Asian">South Asian</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+        <CardFooter className="flex justify-end gap-3 pt-6">
+          <Button variant="outline" onClick={() => router.push("/")}>Cancel</Button>
+          <Button
+            disabled={!type || !name || !zipUrl || !ethinicity || !eyeColor || !age}
+            onClick={trainModel}
+            className="bg-gradient-to-r from-purple-500 to-purple-700 text-white font-semibold shadow-md"
+          >
+            Train
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  )
+}
 
-                      
-                        <div>
-                            <Label htmlFor="eyecolor">Eye Color</Label>
-                            <Select onValueChange={setEyecolor}>
-                                <SelectTrigger id="eyecolor">
-                                    <SelectValue placeholder="Select" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    <SelectItem value="Brown">Brown</SelectItem>
-                                    <SelectItem value="Blue">Blue</SelectItem>
-                                    <SelectItem value="Hazel">Hazel</SelectItem>
-                                    <SelectItem value="Grey">Grey</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+function InputField({ label, value, onChange }: { label: string, value: string, onChange: (val: string) => void }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <Label>{label}</Label>
+      <Input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={label}
+        className="bg-zinc-900/70 border-purple-400/20 focus-visible:ring-purple-500"
+      />
+    </div>
+  )
+}
 
-                        <div>
-                            <Label htmlFor="bald">Bald</Label>
-                            <Switch id="bald" checked={bald} onCheckedChange={setBald} />
-                        </div>
-                    </div>
-
-                    
-                    <Upload onUpload={setZipUrl} />
-                </CardContent>
-
-                
-                <CardFooter className="flex justify-between">
-                    <Button variant="outline" onClick={() => router.push("/")}>Cancel</Button>
-                    <Button
-                        disabled={!type || !name || !zipUrl || !ethinicity || !eyeColor || !age}
-                        onClick={trainModel}
-                    >
-                        Train
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
-    )
+function SelectField({ label, value, onChange, options }: { label: string, value: string, onChange: (val: string) => void, options: string[] }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <Label>{label}</Label>
+      <Select onValueChange={onChange} value={value}>
+        <SelectTrigger className="bg-zinc-900/70 border-purple-400/20 focus-visible:ring-purple-500">
+          <SelectValue placeholder={`Select ${label.toLowerCase()}`} />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((opt) => (
+            <SelectItem key={opt} value={opt}>{opt.replace(/_/g, " ")}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  )
 }

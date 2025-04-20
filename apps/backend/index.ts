@@ -4,9 +4,8 @@ import { prisma } from "db"
 import { FalModel } from "./models/FalAi"
 import { S3Client } from "bun"
 import cors from "cors";
-import dotenv from "dotenv"
 import { jwtMiddleWare } from "./middleware"
-dotenv.config()
+
 const falAiModel = new FalModel()
 
 const app = express()
@@ -17,17 +16,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
-
-//   console.log('Environment variables:', {
-//     endpoint: Bun.env.ENDPOINT,
-//     accessKey: Bun.env.S3_ACCESS_KEY?.slice(0, 5) + '...',
-//     secretKey: Bun.env.S3_SECRET_KEY?.slice(0, 5) + '...',
-//     bucket: Bun.env.BUCKET_NAME,
-//     accountId: Bun.env.ACCOUNT_ID
-//   });
-
-app.use(express.json());
 
 const client = new S3Client({
   region: "auto",
@@ -50,12 +38,6 @@ app.get("/pre-signedUrl", async (req, res) => {
   const key = `models/${Date.now()}_${Math.random()}.zip`;
 
   try {
-    //   console.log('Generating presigned URL for:', {
-    //     bucket: Bun.env.BUCKET_NAME,
-    //     key,
-    //     endpoint: `https://${Bun.env.ACCOUNT_ID}.r2.cloudflarestorage.com`
-    //   });
-
     const url = client.presign(key, {
       method: "PUT",
       bucket: Bun.env.BUCKET_NAME,
@@ -63,17 +45,18 @@ app.get("/pre-signedUrl", async (req, res) => {
       type: "application/zip"
     });
 
-    //console.log('Generated URL:', url);
+    console.log('Generated URL:', url);
     res.json({ url, key });
   } catch (error: any) {
-    //console.error('Full error:', error);
+    console.error('Full error:', error);
     res.status(500).json({ error: error?.message || "Internal Server Error" });
   }
 });
 
 app.post("/ai/training", jwtMiddleWare, async (req, res) => {
   console.log(req.userId)
-  const parsedData = TrainModelSchema.safeParse(req.body);
+  try {
+    const parsedData = TrainModelSchema.safeParse(req.body);
   if (!parsedData.success) {
     console.error("Zod Schema Validation Failed:", parsedData.error.format());
     res.status(411).json({
@@ -104,6 +87,12 @@ app.post("/ai/training", jwtMiddleWare, async (req, res) => {
   res.json({
     modelId: data.id
   })
+  } catch (error) {
+    console.error("Error during training:", error);
+    res.status(500).json({
+      message: "Failed to train model"
+    })
+  }
 })
 
 app.post("/ai/generate", jwtMiddleWare, async (req, res) => {

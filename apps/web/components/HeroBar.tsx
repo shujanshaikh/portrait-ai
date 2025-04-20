@@ -191,26 +191,30 @@ export default function HeroBar() {
             {[
               {
                 title: 'Basic Plan',
-                price: '500 credits/month',
+                price: '100$/month',
+                credits: '1000 credits',
                 features: ['AI-generated portraits', 'Basic customization'],
               },
               {
                 title: 'Pro Plan',
-                price: '2000 credits/month',
+                price: '200$/month',
+                credits: '2000 credits',
                 features: ['AI-generated portraits', 'Advanced customization', 'Priority support'],
               },
               {
                 title: 'Premium Plan',
-                price: '5000 credits/month',
+                price: '500$/month',
+                credits: '5000 credits',
                 features: ['AI-generated portraits', 'Unlimited customization', 'VIP support'],
               },
-            ].map(({ title, price, features }, i) => (
+            ].map(({ title, price, features, credits }, i) => (
               <div
                 key={i}
                 className="p-6 rounded-3xl bg-gradient-to-br from-purple-900/40 to-purple-700/30 border border-white/10 shadow-[0_8px_30px_rgba(109,40,217,0.25)] backdrop-blur-md transition-transform duration-300 hover:-translate-y-2 hover:shadow-purple-700/30"
               >
                 <h3 className="text-xl font-bold text-purple-100 drop-shadow-sm">{title}</h3>
                 <p className="text-2xl text-pink-500 font-semibold mt-2">{price}</p>
+                <p className="text-lg text-purple-300 mt-2">{credits}</p>
                 <ul className="mt-4 text-purple-300">
                   {features.map((feature, index) => (
                     <li key={index} className="mb-2">{feature}</li>
@@ -238,7 +242,7 @@ export default function HeroBar() {
             {' '}
             {new Date().getFullYear()}{' '}
             <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600">
-              PortraitAI
+              @PortraitAI
             </span>{' '}
             . All rights reserved.
           </span>

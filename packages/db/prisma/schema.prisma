@@ -13,90 +13,90 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id String @id @default(uuid())
+  id       String @id @default(uuid())
   username String @unique
 }
 
 enum TrainStatus {
-  Generated 
+  Generated
   Failed
   Pending
 }
 
 model TrainModel {
-  id              String @id  @default(uuid())
-  name            String 
-  age             Int
-  ethinicity      Ethinicity
-  eyeColor       eyeColor
-  userId          String
-  type            Type
-  bald            Boolean
-  triggerPath    String?
-  tensorPath     String?
-  thumbnail     String?
-  status         TrainStatus @default(Pending)
-  zipUrl         String
-  OutputImage   OutputImage[]
-  open            Boolean   @default(false)
-   FalAiId      String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String        @id @default(uuid())
+  name        String
+  age         Int
+  ethinicity  Ethinicity
+  eyeColor    eyeColor
+  userId      String
+  type        Type
+  bald        Boolean
+  triggerPath String?
+  tensorPath  String?
+  thumbnail   String?
+  status      TrainStatus   @default(Pending)
+  zipUrl      String
+  OutputImage OutputImage[]
+  open        Boolean       @default(false)
+  FalAiId     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
   @@index([FalAiId])
 }
 
-
-
 model OutputImage {
-  id String @id @default(uuid())
-  imageUrl String  @default("")
-  modelId String
-  prompt  String
-  userId  String
-  status   Status      @default(Pending)
-  model TrainModel @relation(fields: [modelId], references: [id])
-  FalAiId      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(uuid())
+  imageUrl  String     @default("")
+  modelId   String
+  prompt    String
+  userId    String
+  status    Status     @default(Pending)
+  model     TrainModel @relation(fields: [modelId], references: [id])
+  FalAiId   String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
   @@index([FalAiId])
 }
 
 model Pack {
-  id String @id @default(uuid()) 
-  name String
-  description  String @default("")
-  imageUrl String @default("")
-  prompts PackPrompt[]
+  id          String       @id @default(uuid())
+  name        String
+  description String       @default("")
+  imageUrl    String       @default("")
+  prompts     PackPrompt[]
 }
 
 model PackPrompt {
-  id String @id @default(uuid())
+  id     String @id @default(uuid())
   prompt String
   packId String
-  pack Pack @relation(fields: [packId], references: [id])
+  pack   Pack   @relation(fields: [packId], references: [id])
 }
 
-
 model Payment {
-  id String @id @default(uuid())
-  userId String
-  amount Int
-  status PaymentStatus
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String        @id @default(uuid())
+  userId    String
+  amount    Int
+  status    PaymentStatus
+  credits   Int
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
   @@index([userId])
 }
 
 enum PaymentStatus {
-  Pending 
+  Pending
   Failed
   Succeeded
 }
 
 enum Status {
-  Generated 
+  Generated
   Failed
   Pending
 }
@@ -123,4 +123,3 @@ enum Type {
   Women
   Other
 }
-

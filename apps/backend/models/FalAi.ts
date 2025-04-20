@@ -1,11 +1,8 @@
 import { fal } from "@fal-ai/client";
-import { BaseModel } from "./BaseModel";
 
-export class FalModel extends BaseModel {
+export class FalModel  {
 
-    constructor() {
-        super()
-    }
+    constructor() {}
 
 
     public async generateImages(prompt: string, tensorPath: string) {
@@ -17,7 +14,7 @@ export class FalModel extends BaseModel {
                     scale: 1.0,
                 }]
             },
-            webhookUrl: `${process.env.WEB_BASE_URL}/fal-ai/webhook/image`,
+            webhookUrl: `${Bun.env.WEB_BASE_URL}/fal-ai/webhook/image`,
         });
 
         return { request_id, response_url}
@@ -25,12 +22,24 @@ export class FalModel extends BaseModel {
 
 
     public async trainingModel(zipUrl: string, tensorWord: string) {
+        console.log("The zipUrl is : ", zipUrl)
+
+        try {
+            const res = await fetch(zipUrl , {method : "HEAD"})
+            if (!res.ok) {
+                console.error(`Zip url not accesible : ${zipUrl} ${res.status}`);
+                throw new Error("Failed to fetch zipUrl");
+            }
+        } catch (error) {
+            console.error(`Failed to fetch zipUrl: ${zipUrl} ${error}`);
+           throw new Error("Failed to fetch zipUrl");
+        }
         const { request_id, response_url } = await fal.queue.submit("fal-ai/flux-lora-fast-training", {
             input: {
                 images_data_url: zipUrl,
                 trigger_word: tensorWord
             },
-            webhookUrl: `${process.env.WEB_BASE_URL}/fal-ai/webhook/train`,
+            webhookUrl: `${Bun.env.WEB_BASE_URL}/fal-ai/webhook/train`,
         });
         return { request_id  , response_url  }
     }
