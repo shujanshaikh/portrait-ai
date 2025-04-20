@@ -1,3 +1,4 @@
+"use client";
 import { AppBar } from '@/components/AppBar';
 import { ImageGenerate } from '@/components/ImageGenerate';
 import { Packs } from '@/components/Packs';
