@@ -1,21 +1,30 @@
-"use client";
+
 import { AppBar } from '@/components/AppBar';
 import { ImageGenerate } from '@/components/ImageGenerate';
 import { Packs } from '@/components/Packs';
 import { Photos } from '@/components/Photos';
 import TrainModel from '@/components/TrainModel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {auth} from "@clerk/nextjs/server"
+import { redirect } from 'next/navigation';
 
-export default function DashBoard() {
+export default async function DashBoard() {
+   const {userId } = await auth()
+   
+   if(!userId) {
+    redirect('/')
+   }
+
   return (
+
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black text-white">
       {/* AppBar Layer */}
-      <div className="z-50 relative">
+      <div className="z-50 relative mb-8 p-2">
         <AppBar />
       </div>
 
       {/* Tabs Container */}
-      <div className="w-full max-w-6xl mx-auto px-2 pt-10 sm:pt-16 md:pt-24">
+      <div className="w-full max-w-6xl mx-auto px-2 pt-10 sm:pt-16 md:pt-24 md:px-4">
         <Tabs defaultValue="photos" className="w-full">
           <div className="flex justify-center">
             <TabsList className="flex flex-wrap gap-2 bg-white/5 border border-white/10  backdrop-blur-xl rounded-2xl shadow-md">

@@ -1,11 +1,9 @@
 "use client"
 import { AppBar } from "@/components/AppBar";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import { useAuth } from "@/hooks/useAuth";
 
 export default function PricingPage() {
 
-  const { getToken , isAuthenticated , user } = useAuth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black text-white">
