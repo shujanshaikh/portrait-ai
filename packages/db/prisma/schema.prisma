@@ -14,8 +14,13 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  username String @unique
+  id             String   @id @default(uuid())
+  clerkId        String   @unique
+  email          String   @unique
+  name           String?
+  profilePicture String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 enum TrainStatus {
@@ -77,22 +82,59 @@ model PackPrompt {
   pack   Pack   @relation(fields: [packId], references: [id])
 }
 
-model Payment {
-  id        String        @id @default(uuid())
+model Credits {
+  id     String @id @default(uuid())
+  userId String
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
   userId    String
-  amount    Int
-  status    PaymentStatus
-  credits   Int
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  plan      PlanType
+  paymentId String
+  orderId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserCredit {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  amount    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+model Transaction {
+  id        String            @id @default(cuid())
+  userId    String
+  plan      PlanType
+  status    TransactionStatus @default(PENDING)
+  amount    Int
+  paymentId String
+  orderId   String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PlanType {
+  basic
+  pro
+  premium
 }
 
 enum PaymentStatus {
   Pending
   Failed
-  Succeeded
+  Success
 }
 
 enum Status {

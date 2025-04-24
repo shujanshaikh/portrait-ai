@@ -17,14 +17,14 @@ export default async function DashBoard() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black text-white mb-8 p-8 md:mb-0">
       {/* AppBar Layer */}
-      <div className="z-50 relative mb-8 p-2">
+      {/* <div className="z-50 relative mb-8 p-2">
         <AppBar />
-      </div>
+      </div> */}
 
       {/* Tabs Container */}
-      <div className="w-full max-w-6xl mx-auto px-2 pt-10 sm:pt-16 md:pt-24 md:px-4">
+      <div className="w-full max-w-6xl mx-auto px-2 pt-10 sm:pt-16 md:pt-22 md:px-2">
         <Tabs defaultValue="photos" className="w-full">
           <div className="flex justify-center">
             <TabsList className="flex flex-wrap gap-2 bg-white/5 border border-white/10  backdrop-blur-xl rounded-2xl shadow-md">

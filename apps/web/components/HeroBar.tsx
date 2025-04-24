@@ -3,10 +3,9 @@
 import { Button } from './ui/button';
 import { ArrowRight, Github, Twitter, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 export default function HeroBar() {
-  const router = useRouter();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-950 via-black to-purple-900 text-white">
@@ -25,11 +24,11 @@ export default function HeroBar() {
             Join thousands of creators who have already transformed their photos with our AI technology.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6 animate-fade-in-up">
-            <Button onClick={() => router.push('/dashboard')} className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-lg transition-all duration-200">
+            <Button onClick={() => redirect('/dashboard')} className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-lg transition-all duration-200">
               Get Started
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button variant="outline" className="border border-purple-400 text-purple-200 bg-black/30 hover:bg-purple-800/30 px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-200" onClick={() => router.push('/learn-more')}>
+            <Button variant="outline" className="border border-purple-400 text-purple-200 bg-black/30 hover:bg-purple-800/30 px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-200" onClick={() => redirect('/learn-more')}>
               Learn More
             </Button>
           </div>
@@ -191,20 +190,20 @@ export default function HeroBar() {
             {[
               {
                 title: 'Basic Plan',
-                price: '100$/month',
-                credits: '1000 credits',
+                price: '25$/month',
+                credits: '250 credits',
                 features: ['AI-generated portraits', 'Basic customization'],
               },
               {
                 title: 'Pro Plan',
-                price: '200$/month',
-                credits: '2000 credits',
+                price: '50$/month',
+                credits: '500 credits',
                 features: ['AI-generated portraits', 'Advanced customization', 'Priority support'],
               },
               {
                 title: 'Premium Plan',
-                price: '500$/month',
-                credits: '5000 credits',
+                price: '100$/month',
+                credits: '1000 credits',
                 features: ['AI-generated portraits', 'Unlimited customization', 'VIP support'],
               },
             ].map(({ title, price, features, credits }, i) => (

@@ -3,7 +3,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { ModeToggle } from './ui/toggle';
 import { Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 export function AppBar() {
 
@@ -26,7 +26,7 @@ export function AppBar() {
 
         {/* Controls */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" className="text-purple-200 hover:bg-purple-800" onClick={() => router.push('/pricing')}>
+          <Button variant="ghost" size="sm" className="text-purple-200 hover:bg-purple-800" onClick={() => redirect('/pricing')}>
             Pricing
           </Button>
           <SignedOut>

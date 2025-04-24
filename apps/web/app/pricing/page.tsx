@@ -8,9 +8,6 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black text-white">
       {/* AppBar with drop shadow and proper layering */}
-      <div className="z-50 relative">
-        <AppBar />
-      </div>
 
       {/* Section content with spacing */}
       <div className="max-w-5xl mx-auto px-4 pt-36 sm:pt-44 md:pt-52">
