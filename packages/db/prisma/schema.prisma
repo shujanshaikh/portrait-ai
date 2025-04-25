@@ -82,11 +82,6 @@ model PackPrompt {
   pack   Pack   @relation(fields: [packId], references: [id])
 }
 
-model Credits {
-  id     String @id @default(uuid())
-  userId String
-}
-
 model Subscription {
   id        String   @id @default(cuid())
   userId    String

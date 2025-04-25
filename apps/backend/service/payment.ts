@@ -215,3 +215,40 @@ export async function addCredits(
     throw error
   }
 }
+
+export async function getPacks(
+  userId: string,
+  paymentId: string,
+  plan: PlanType,
+  orderId: string,
+  isAnnual: boolean = false
+) {
+  try {
+
+    return await withRetry(() =>
+      prisma.$transaction(async (client) => {
+        console.log("Generating the packs", {
+          userId,
+          paymentId,
+          plan,
+          orderId
+        })
+
+        const subscription = await client.subscription.create({
+          data: {
+            userId,
+            plan,
+            paymentId,
+            orderId
+          }
+        })
+
+        await addCredits(userId, plan)
+        return subscription;
+      })
+    )
+  } catch (error) {
+    console.log("Error while creating error");
+    throw error
+  }
+}
