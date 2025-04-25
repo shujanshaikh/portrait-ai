@@ -4,8 +4,8 @@ import crypto from "crypto";
 import Razorpay from "razorpay";
 
 
-const RAZORPAY_KEY = Bun.env.KEY_ID;
-const RAZORPAY_SECRET = Bun.env.KEY_SECRET
+const RAZORPAY_KEY = Bun.env.RAZORPAY_KEY_ID;
+const RAZORPAY_SECRET = Bun.env.RAZORPAY_KEY_SECRET;
 
 
 export const PLAN_INFO = {
@@ -113,7 +113,7 @@ export async function razorPayment(
     );
 
     return {
-      key: Bun.env.KEY_ID,
+      key: RAZORPAY_KEY ,
       amount: amountinPaise,
       name: "POTRAIT-Ai",
       description: `${plan.toUpperCase()} Plan - ${CREDITS_PER_PLAN[plan]} Credits`,
@@ -166,7 +166,8 @@ export const verifyRazorpaySignature = async ({
       where: {
         userId: userId,
         paymentId: paymentId,
-        status: "PENDING"
+        status: "PENDING",
+        plan: plan
       }
     })
 
@@ -216,7 +217,7 @@ export async function addCredits(
   }
 }
 
-export async function getPacks(
+export async function createSubscriptionRecord(
   userId: string,
   paymentId: string,
   plan: PlanType,
@@ -252,3 +253,10 @@ export async function getPacks(
     throw error
   }
 }
+
+export const PaymentService = {
+  razorPayment,
+  verifyRazorpaySignature,
+  createSubscriptionRecord,
+  addCredits
+};
